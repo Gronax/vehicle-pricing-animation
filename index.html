@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Price Animation</title>
+  <script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <!--[if gte IE 9]>
+  <style type="text/css">
+    .gradient {
+       filter: none;
+    }
+  </style>
+<![endif]-->
+  <style media="screen">
+    html {
+      position: relative;
+      height: 100%;
+    }
+
+    .price-container {
+        padding: 10px;
+    }
+
+
+    .price-section-container {
+        opacity: 0;
+        float: left;
+    }
+
+    .price-title {
+        font-size: 14px;
+    }
+
+    .price-numeric {
+        font-size: 18px;
+    }
+
+    .price-section {
+        position: relative;
+        background: #ffffff;
+        color: #eeeeee;
+        padding: 6px;
+        margin: 1px;
+        margin-bottom: 20px;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        text-align: center;
+        font-family: 'myriad-set-pro_semibold','Century Gothic','Open Sans',sans-serif;
+    }
+
+        .price-section:after,
+        .price-section:before {
+            top: 100%;
+            left: 50%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .price-section:after {
+            border-color: rgba(255, 255, 255, 0);
+            border-top-color: #ffffff;
+            border-width: 6px;
+            margin-left: -6px;
+        }
+
+        .price-section:before {
+            border-color: rgba(221, 221, 221, 0);
+            border-top-color: #dddddd;
+            border-width: 6px;
+            margin-left: -6px;
+        }
+
+    #priceNo1 {
+        width: 25%;
+    }
+
+    #priceNo2 {
+        width: 40%;
+    }
+
+    #priceNo3 {
+        width: 35%;
+    }
+
+    #priceNo1 .price-section,
+    #priceNo1 .price-section:after {
+        border-top-color: #06aa06;
+        background: #2cbf00;
+        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJjYmYwMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwNmFhMDYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+        background: -moz-linear-gradient(top, #2cbf00 0%, #06aa06 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #2cbf00), color-stop(100%, #06aa06));
+        background: -webkit-linear-gradient(top, #2cbf00 0%, #06aa06 100%);
+        background: -o-linear-gradient(top, #2cbf00 0%, #06aa06 100%);
+        background: -ms-linear-gradient(top, #2cbf00 0%, #06aa06 100%);
+        background: linear-gradient(to bottom, #2cbf00 0%, #06aa06 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#2cbf00', endColorstr='#06aa06', GradientType=0);
+    }
+
+    #priceNo2 .price-section,
+    #priceNo2 .price-section:after {
+        border-top-color: #006ddb;
+        background: #00a0db;
+        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIxJSIgc3RvcC1jb2xvcj0iIzAwYTBkYiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDZkZGIiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+        background: -moz-linear-gradient(top, #00a0db 1%, #006ddb 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(1%, #00a0db), color-stop(100%, #006ddb));
+        background: -webkit-linear-gradient(top, #00a0db 1%, #006ddb 100%);
+        background: -o-linear-gradient(top, #00a0db 1%, #006ddb 100%);
+        background: -ms-linear-gradient(top, #00a0db 1%, #006ddb 100%);
+        background: linear-gradient(to bottom, #00a0db 1%, #006ddb 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#00a0db', endColorstr='#006ddb', GradientType=0);
+    }
+
+    #priceNo3 .price-section,
+    #priceNo3 .price-section:after {
+        border-top-color: #ed8209;
+        background: #e59900;
+        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIxJSIgc3RvcC1jb2xvcj0iI2U1OTkwMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlZDgyMDkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+        background: -moz-linear-gradient(top, #e59900 1%, #ed8209 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(1%, #e59900), color-stop(100%, #ed8209));
+        background: -webkit-linear-gradient(top, #e59900 1%, #ed8209 100%);
+        background: -o-linear-gradient(top, #e59900 1%, #ed8209 100%);
+        background: -ms-linear-gradient(top, #e59900 1%, #ed8209 100%);
+        background: linear-gradient(to bottom, #e59900 1%, #ed8209 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#e59900', endColorstr='#ed8209', GradientType=0);
+    }
+
+    .price-car {
+        position: relative;
+        width: 80px;
+        left: -80px;
+        margin-bottom: 5px;
+        opacity: 0;
+    }
+
+    .price-bar {
+        width: 0;
+        height: 4px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        -webkit-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+        box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+        background: #f9f9f9;
+        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y5ZjlmOSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlOWU5ZTkiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+        background: -moz-linear-gradient(top, #f9f9f9 0%, #e9e9e9 100%, #ffffff 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f9f9f9), color-stop(100%, #e9e9e9), color-stop(100%, #ffffff));
+        background: -webkit-linear-gradient(top, #f9f9f9 0%, #e9e9e9 100%, #ffffff 100%);
+        background: -o-linear-gradient(top, #f9f9f9 0%, #e9e9e9 100%, #ffffff 100%);
+        background: -ms-linear-gradient(top, #f9f9f9 0%, #e9e9e9 100%, #ffffff 100%);
+        background: linear-gradient(to bottom, #f9f9f9 0%, #e9e9e9 100%, #ffffff 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#ffffff', GradientType=0);
+    }
+
+    .bar-ball {
+        opacity: 0;
+        float: left;
+    }
+
+    .ball {
+        position: relative;
+        top: -10px;
+        width: 14px;
+        height: 14px;
+        background: red;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        left: 47%;
+        -webkit-box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.5);
+        background: #f9f9f9;
+        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJod…BoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+        background: -moz-linear-gradient(top, #f9f9f9 0%, #e9e9e9 100%, #ffffff 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f9f9f9), color-stop(100%, #e9e9e9), color-stop(100%, #ffffff));
+        background: -webkit-linear-gradient(top, #f9f9f9 0%, #e9e9e9 100%, #ffffff 100%);
+        background: -o-linear-gradient(top, #f9f9f9 0%, #e9e9e9 100%, #ffffff 100%);
+        background: -ms-linear-gradient(top, #f9f9f9 0%, #e9e9e9 100%, #ffffff 100%);
+        background: linear-gradient(to bottom, #f9f9f9 0%, #e9e9e9 100%, #ffffff 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#ffffff', GradientType=0);
+    }
+
+    .bar-ball1 {
+        width: 25%;
+    }
+
+    .bar-ball2 {
+        width: 40%;
+    }
+
+    .bar-ball3 {
+        width: 35%;
+    }
+    .bar-ball1 .ball {
+        border-top-color: #06aa06;
+        background: #2cbf00;
+        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJjYmYwMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwNmFhMDYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+        background: -moz-linear-gradient(top, #2cbf00 0%, #06aa06 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #2cbf00), color-stop(100%, #06aa06));
+        background: -webkit-linear-gradient(top, #2cbf00 0%, #06aa06 100%);
+        background: -o-linear-gradient(top, #2cbf00 0%, #06aa06 100%);
+        background: -ms-linear-gradient(top, #2cbf00 0%, #06aa06 100%);
+        background: linear-gradient(to bottom, #2cbf00 0%, #06aa06 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#2cbf00', endColorstr='#06aa06', GradientType=0);
+    }
+
+    .bar-ball2 .ball {
+        border-top-color: #006ddb;
+        background: #00a0db;
+        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIxJSIgc3RvcC1jb2xvcj0iIzAwYTBkYiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDZkZGIiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+        background: -moz-linear-gradient(top, #00a0db 1%, #006ddb 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(1%, #00a0db), color-stop(100%, #006ddb));
+        background: -webkit-linear-gradient(top, #00a0db 1%, #006ddb 100%);
+        background: -o-linear-gradient(top, #00a0db 1%, #006ddb 100%);
+        background: -ms-linear-gradient(top, #00a0db 1%, #006ddb 100%);
+        background: linear-gradient(to bottom, #00a0db 1%, #006ddb 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#00a0db', endColorstr='#006ddb', GradientType=0);
+    }
+
+    .bar-ball3 .ball {
+        border-top-color: #ed8209;
+        background: #e59900;
+        background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIxJSIgc3RvcC1jb2xvcj0iI2U1OTkwMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlZDgyMDkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+        background: -moz-linear-gradient(top, #e59900 1%, #ed8209 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(1%, #e59900), color-stop(100%, #ed8209));
+        background: -webkit-linear-gradient(top, #e59900 1%, #ed8209 100%);
+        background: -o-linear-gradient(top, #e59900 1%, #ed8209 100%);
+        background: -ms-linear-gradient(top, #e59900 1%, #ed8209 100%);
+        background: linear-gradient(to bottom, #e59900 1%, #ed8209 100%);
+        filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#e59900', endColorstr='#ed8209', GradientType=0);
+    }
+
+  </style>
+</head>
+
+<body>
+
+                  <div class="price-container">
+                      <div id="priceNo1" class="price-section-container">
+                          <div class="price-section gradient">
+                              <div class="price-title">
+                                  Price
+                                  <br>#1
+                              </div>
+                              <div class="price-numeric">120.000</div>
+                          </div>
+                      </div>
+                      <div id="priceNo2" class="price-section-container">
+                          <div class="price-section gradient">
+                              <div class="price-title">
+                                  Price
+                                  <br>#2
+                              </div>
+                              <div class="price-numeric">121.000</div>
+                          </div>
+                      </div>
+                      <div id="priceNo3" class="price-section-container">
+                          <div class="price-section gradient">
+                              <div class="price-title">
+                                  Price
+                                  <br>#3
+                              </div>
+                              <div class="price-numeric">125.000</div>
+                          </div>
+                      </div>
+                      <img class="price-car" src="price-car.png" />
+                          <div class="price-bar gradient">
+                          </div>
+                          <div class="bar-ball bar-ball1"><div class="ball"></div></div>
+                          <div class="bar-ball bar-ball2"><div class="ball"></div></div>
+                          <div class="bar-ball bar-ball3"><div class="ball"></div></div>
+                  </div>
+</body>
+<!-- PRICE ANIMATION -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        setInterval(function () { }, 6000);
+        // değerler
+        var firstSection = "20%";
+        var secondSection = "45%";
+        var thirdSection = "85%";
+        var timeDuration = 1500;
+        var timeDelay = 1500;
+
+        //var test = Math.floor(($(window).width() / 100) * 25) ;
+        //alert(test);
+
+        // .price-car step 1
+        $(".price-car").animate({
+            left: "0%",
+            opacity: 1
+        }, timeDuration).delay(timeDelay);
+        // .price-car step 2
+        $(".price-car").animate({
+            left: "32%"
+        }, timeDuration).delay(timeDelay);
+        // .price-car step 3
+        $(".price-car").animate({
+            left: "69%"
+        }, timeDuration).delay(timeDelay);
+        // .price-car step 4
+        $(".price-car").animate({
+            left: "100%",
+            opacity: 0
+        }, timeDuration);
+        // .price-bar step 1
+        $(".price-bar").animate({
+            width: "14%"
+        }, timeDuration, function () {
+            $("#priceNo1, .bar-ball1").animate({
+                opacity: 1
+            }).delay(timeDelay);
+        }).delay(timeDelay);
+        // .price-bar step 2
+        $(".price-bar").animate({
+            width: "45%"
+        }, timeDuration, function () {
+            $("#priceNo2, .bar-ball2").animate({
+                opacity: 1
+            }).delay(timeDelay);
+            /*$("#priceNo1 .price-section").css("border-radius", "4px 0 0 4px");
+            $("#priceNo2 .price-section").css("border-radius", "0 4px 4px 0");*/
+        }).delay(timeDelay);
+        // .price-bar step 3
+        $(".price-bar").animate({
+            width: "84%"
+        }, timeDuration, function () {
+            $("#priceNo3, .bar-ball3").animate({
+                opacity: 1
+            }).delay(timeDelay);
+            /*$("#priceNo2 .price-section").css("border-radius", "0");
+            $("#priceNo3 .price-section").css("border-radius", "0 4px 4px 0");*/
+        }).delay(timeDelay);
+        // .price-bar step 4
+        $(".price-bar").animate({
+            width: "100%"
+        }, timeDuration);
+    });
+</script>
+<!-- PRICE ANIMATION -->
+
+</html>
